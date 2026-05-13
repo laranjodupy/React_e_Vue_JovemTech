@@ -1,12 +1,16 @@
-/** @param {Object} param0 
-* @param {HTMLInputTypeAttribute} param0.type */
-function InputField({label, type, name}) {
-    return (
+function  InputField({label, type, name, placeholder, value, onChange}){
+    return(
         <div>
             <label>{label}</label>
-            <input type={type} name={name} />
+            <input 
+            type={type} 
+            name={name} 
+            placeholder={placeholder}
+            value={value}
+            onChange={onChange}
+            />
         </div>
     )
 }
 
-export default InputField;
+export default InputField
