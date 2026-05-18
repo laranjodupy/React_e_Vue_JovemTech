@@ -1,6 +1,11 @@
+import cors from 'cors'
 const express = require('express');
 const bilola = express(); //é o servidor
+bilola.use(cors())
 bilola.use(express.json()); //middleware para interpretar o corpo da requisição como json
+
+
+
 const PORT = 3000;
 
 const registros = []; // funciona como uma database que roda em tempo de execução
@@ -10,6 +15,16 @@ bilola.get('/registros', (req, res) => {
     //Lógica para obter os registros do banco de dados
     res.status(200).json(registros)
 });
+
+bilola.get('/   ', (req, res) => {
+    const dados = req.body;
+    res.status(200).json({
+        sucesso: true,
+        mensagem: 'ta de boa ai, funfando',
+        dados: dados
+    })
+    registros.push(dados)
+}) //comando para saber se o servidor esta funfando tranquilo a partir do get (requisição). Se sim, ele vai dar esse post la.
 
 //rota post para criar um novo registro
 bilola.post('/registros', (req, res) => {

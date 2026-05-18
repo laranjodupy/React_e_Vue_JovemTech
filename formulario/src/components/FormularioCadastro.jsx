@@ -1,29 +1,42 @@
 import InputField from "./InputField"
 import BotaoEnviar from './BotaoEnviar.jsx'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 function FormularioCadastro() {
-   //const [erro, setErro] = useState('');
-    //const [sucesso, setSucesso] = useState(false);
     const [validacao, setValidacao] = useState({erro: '', sucesso: false})
     const [user, setUser] = useState({nome: '', email: '', telefone: ''})
-    const handleSubmit = (e) => {
+
+     const handleSubmit = async(e) => {
         e.preventDefault()
 
-        if (user.nome.trim() === '') {
-            setValidacao((dados) => ({...dados, erro: 'Nome vazio, preencha fdp'}))
-            console.log()
-            return 
-        }
-        if (user.telefone.trim().length !== 11) {
-            setValidacao((dados) => ({...dados, erro: 'Seu número não possui 11 caracteres '}))
-            return
-        }
-
-        setValidacao.sucesso((dados) => ({...dados, sucesso: true}));
-        console.log(user)// Ele segura o comportamento padrão do formulário, que é recarregar a página, e permite que a gente faça o que quiser com os dados do formulário. Sem isso, a página recarregaria e perderíamos os dados que o usuário digitou.
+    //     if (user.nome.trim() === '') {
+    //         setValidacao((dados) => ({...dados, erro: 'Nome vazio, preencha fdp'}))
+    //         console.log()
+    //         return 
+    //     }
+    //     if (user.telefone.trim().length !== 11) {
+    //         setValidacao((dados) => ({...dados, erro: 'Seu número não possui 11 caracteres '}))
+    //         return
+    //     }
+    try{
+        const resposta = await fetch('http://localhost:3000/registros', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(nome, email, telefone)
+        })
+        const resultado = await resposta.json()
+        console.log(resultado)
+    } catch(error) {'Deu erro ai', erro}
+     }
+     useEffect(() => {
+        buscarCoisas()
+     }, []
+    )
+    const buscarCoisas = async () => {
+        const resposta = await fetch('http://localhost:3000/registros')
+        const dados = await resposta.json()
+        setRegistros(dados)
     }
-
     return(
         <form onSubmit={handleSubmit}>
             {validacao.erro && <p style={{color: 'red'}}>{validacao.erro}</p>}
