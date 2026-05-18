@@ -9,6 +9,10 @@ import Contador from "./components/Contador.jsx"
 
 
 function App() {
+
+  useEffect(() => {
+    console.log("Contador apareceuna tela!" + count)
+  }, [count])
   return (
     <div>
       <h1>Formulario</h1>
