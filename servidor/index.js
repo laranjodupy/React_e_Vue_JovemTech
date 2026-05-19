@@ -1,4 +1,4 @@
-import cors from 'cors'
+const cors = require('cors')
 const express = require('express');
 const bilola = express(); //é o servidor
 bilola.use(cors())
