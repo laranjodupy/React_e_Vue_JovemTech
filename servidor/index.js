@@ -31,26 +31,37 @@ bilola.get('/   ', (req, res) => {
 //rota post para criar um novo registro
 bilola.post('/registros', (req, res) => {
     const dados = req.body // pega o corpo da requisição
-    if (!dados.nome){
+    if (!dados.nome.trim()){
        return res.status(400).json({
             erro:"Campo de nome é Obrigatório!"
         })
     }
 
-    //desafio 1 - evitando duplicatas -- desafio 1 - evitando duplicatas -- desafio 1 - evitando duplicatas -- desafio 1 - evitando duplicatas
-    const nomedoMermo = registros.find(r=> r.email === dados.email)
-    const telefonedoMermo = registros.find(r=> r.telefone === dados.telefone)
-    if (nomedoMermo) {
+    if (dados.nome.length > 100) {
+        return res.status(400).json({
+            erro: 'O nome está muito grande, nasça com um nome menor'
+        })
+    }
+
+    //desafio 1,3 e 4 - evitando duplicatas -- desafio 1 - evitando duplicatas -- desafio 1 - evitando duplicatas -- desafio 1 - evitando duplicatas
+    const emaildoMermo = registros.find(jorge=> jorge.email === dados.email)
+    const telefonedoMermo = registros.find(jorge=> jorge.telefone === dados.telefone)
+    const nomedoMermoSensivil = registros.find(roberto => roberto.nome.toLowerCase() === dados.nome.trim().toLowerCase())
+    if (emaildoMermo) {
         return res.status(409).json({
-            erro: "Nome engual ai"
+            erro: "Email engual ai, amiguinhoul <3"
         }) 
     }
     if (telefonedoMermo) {
         return res.status(409).json({
-            erro: 'Já existe essa merda'
+            erro: 'Já existe essa merda de telefone'
         })
     }
-
+    if (nomedoMermoSensivil) {
+        return res.status(409).json({
+            erro: "Nome já existente meu brother, nasça com outro"
+        })
+    }
    registros.push(dados) //adiciona os dados ao array de registros
 
     return res.status(201).json( {

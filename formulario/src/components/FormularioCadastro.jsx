@@ -29,12 +29,23 @@ function FormularioCadastro() {
                 method: 'POST', //método é o que vai fazer, nesse caso é o post
                 headers: { 'Content-Type': 'application/json' }, //define ao servidor que esta sendo enviado um json para evitar erros.
                 body: JSON.stringify(user) //como o estado já é um json, basta declará-lo.
+
             })
             const resultado = await resposta.json()
-            console.log(resultado)
+            console.log(resposta)
+            const statusCode = resposta.status; 
+            if (statusCode == 409) {
+                setValidacao({erro: 'Deu erro de conflito ai' })
+            }
+    
         } catch (error) {
-            console.log('Deu errado ai', error)
+            //desafio 
+            console.log('erroadouef', error)
+            
+            
+
         }
+        
     }
     return (
         <form onSubmit={handleSubmit}>
@@ -46,7 +57,11 @@ function FormularioCadastro() {
                 name={"nome"}
                 placeholder={"Digite seu nome"}
                 value={user.nome}
-                onChange={(e) => setUser((dados) => ({ ...dados, nome: e.target.value, telefone: user.telefone, email: user.email }))}
+                onChange={(e) => {
+                    setUser((dados) => ({ ...dados, nome: e.target.value, telefone: user.telefone, email: user.email }))
+                    setValidacao({erro: ''})
+                }
+            }
             />
             <InputField
                 label={"Email: "}
