@@ -1,21 +1,24 @@
 import InputField from "./InputField"
 import BotaoEnviar from './BotaoEnviar.jsx'
 import { useEffect, useState } from "react"
+import { use } from "react"
 
 function FormularioCadastro() {
     const [validacao, setValidacao] = useState({ erro: '', sucesso: false })
     const [user, setUser] = useState({ nome: '', email: '', telefone: '' })
     const [coisaslegais, setCoisasLegais] = useState([]) //busca os registros, deixei coisas legais porque são coisas legais
-
+    const [atualizar, setAtualizar] = useState(false)
+    const [podeusar, setPodeUsar] = useState({pode: true, carregano: "EnvíSamerda"})
 
     const buscarCoisasLegais = async () => {
         const resposta = await fetch('http://localhost:3000/registros')
-        const dados = await resposta.json()
+        const dados = await resposta.json() 
         setCoisasLegais(dados)
     }
+
     useEffect(() => { //useEffect serva para uma comunicação in-live
         buscarCoisasLegais() //busca os registros
-    }, [])
+    }, [atualizar])
 
     useEffect(() => {
         console.log(coisaslegais)
@@ -23,6 +26,14 @@ function FormularioCadastro() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+
+        
+    setPodeUsar({ pode: false, carregano: 'PeraiMf' })
+
+    setTimeout(() => {
+        setPodeUsar({ pode: true, carregano: 'EnvíSamerda' })
+        }, 3000)
+
 
         try {
             const resposta = await fetch('http://localhost:3000/registros', {
@@ -34,8 +45,17 @@ function FormularioCadastro() {
             const resultado = await resposta.json()
             console.log(resposta)
             const statusCode = resposta.status; 
+
             if (statusCode == 409) {
                 setValidacao({erro: 'Deu erro de conflito ai' })
+            }
+
+            if (statusCode == 201) {
+                setAtualizar(!atualizar)
+            }
+
+            if (statusCode == 200) {
+                setAtualizar(!atualizar)
             }
     
         } catch (error) {
@@ -101,8 +121,10 @@ function FormularioCadastro() {
                 name={"indeterminado"}
             />
             <BotaoEnviar
-                texto={"Cadastrar"} />
-            <div>
+                texto={podeusar.carregano} 
+                disabled={!podeusar.pode}
+            />     
+            <div id= "registros">
                 <p>
                     Nome do usuário:  {user.nome}
                 </p>
