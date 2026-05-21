@@ -21,9 +21,8 @@ function FormularioCadastro() {
     }, [atualizar])
 
     useEffect(() => {
-        console.log(coisaslegais)
-    }, [coisaslegais])
-
+        
+    }, [])
     const handleSubmit = async (e) => {
         e.preventDefault()
 
@@ -44,10 +43,18 @@ function FormularioCadastro() {
             })
             const resultado = await resposta.json()
             console.log(resposta)
-            const statusCode = resposta.status; 
+            const statusCode = resposta.status; //const que pega o codigo que retorna do servidor e armazena
 
             if (statusCode == 409) {
-                setValidacao({erro: 'Deu erro de conflito ai' })
+                setValidacao({erro: 'Deu erro de conflito ai' }) //como o statusCode é number, com ele é possivel fazer uma condição em cima do codigo para tratá-lo. Nesse caso, o setValidação é alterado na chave erro
+            }
+
+            if (statusCode == 201) {
+                setAtualizar(!atualizar)
+            }
+
+            if (statusCode == 200) {
+                setAtualizar(!atualizar)
             }
 
             if (statusCode == 201) {
@@ -60,13 +67,16 @@ function FormularioCadastro() {
     
         } catch (error) {
             //desafio 
-            console.log('erroadouef', error)
+            console.log('Táerradomizera', error) // da um catch no erro
             
             
 
         }
         
-    }
+    } /* -- return:
+    - a validacao.erro abaixo pega o valor alterado no setValidacao(que altera ao mesmo tempo que o é trocado, mas não é um hook
+    
+    - observação, no onChange de nome, percebe-se que é possível adicionar varias funções numa arrow function. Nesse caso, o setUser e o setValidação trabalham ao mesmo tempo nessa função.*/
     return (
         <form onSubmit={handleSubmit}>
             {validacao.erro && <p style={{ color: 'red' }}>{validacao.erro}</p>}
