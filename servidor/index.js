@@ -3,11 +3,6 @@ const express = require('express');
 const bilola = express(); //é o servidor
 bilola.use(cors())
 bilola.use(express.json()); //middleware para interpretar o corpo da requisição como json
-const primeromausculu = (nome) => {
-    return name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).join(' ')) //essa função vai: deixar o nome em lower -> separar os espaços por "," -> criar um map que tem uma arrow funtion que trata cada palavra separando as primeiras letras com o indice charat -> substitui as ',' por ' ', com o join. #Funcionalidade = fazer validação de duplicatas com letras maiusculas e minusculas
-}
-
-//homens peludos
 
 const PORT = 3000;
 
