@@ -1,27 +1,38 @@
 import InputField from "./InputField"
 import BotaoEnviar from './BotaoEnviar.jsx'
 import { useEffect, useState } from "react"
+import { use } from "react"
 
 function FormularioCadastro() {
     const [validacao, setValidacao] = useState({ erro: '', sucesso: false })
     const [user, setUser] = useState({ nome: '', email: '', telefone: '' })
     const [coisaslegais, setCoisasLegais] = useState([]) //busca os registros, deixei coisas legais porque são coisas legais
-
+    const [atualizar, setAtualizar] = useState(false)
+    const [podeusar, setPodeUsar] = useState({pode: true, carregano: "EnvíSamerda"})
 
     const buscarCoisasLegais = async () => {
         const resposta = await fetch('http://localhost:3000/registros')
-        const dados = await resposta.json()
+        const dados = await resposta.json() 
         setCoisasLegais(dados)
     }
+
     useEffect(() => { //useEffect serva para uma comunicação in-live
         buscarCoisasLegais() //busca os registros
-    }, [])
+    }, [atualizar])
 
     useEffect(() => {
         
     }, [])
     const handleSubmit = async (e) => {
         e.preventDefault()
+
+        
+    setPodeUsar({ pode: false, carregano: 'PeraiMf' })
+
+    setTimeout(() => {
+        setPodeUsar({ pode: true, carregano: 'EnvíSamerda' })
+        }, 3000)
+
 
         try {
             const resposta = await fetch('http://localhost:3000/registros', {
@@ -32,9 +43,22 @@ function FormularioCadastro() {
             })
             const resultado = await resposta.json()
             console.log(resposta)
+<<<<<<< HEAD
             const statusCode = resposta.status; //const que pega o codigo que retorna do servidor e armazena
+=======
+            const statusCode = resposta.status; 
+
+>>>>>>> 42996ae92720cc5dfe084e6b1585e92baa09f396
             if (statusCode == 409) {
                 setValidacao({erro: 'Deu erro de conflito ai' }) //como o statusCode é number, com ele é possivel fazer uma condição em cima do codigo para tratá-lo. Nesse caso, o setValidação é alterado na chave erro
+            }
+
+            if (statusCode == 201) {
+                setAtualizar(!atualizar)
+            }
+
+            if (statusCode == 200) {
+                setAtualizar(!atualizar)
             }
     
         } catch (error) {
@@ -103,8 +127,10 @@ function FormularioCadastro() {
                 name={"indeterminado"}
             />
             <BotaoEnviar
-                texto={"Cadastrar"} />
-            <div>
+                texto={podeusar.carregano} 
+                disabled={!podeusar.pode}
+            />     
+            <div id= "registros">
                 <p>
                     Nome do usuário:  {user.nome}
                 </p>

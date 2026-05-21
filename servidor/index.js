@@ -39,8 +39,8 @@ bilola.post('/registros', (req, res) => {
     }
 
     //desafio 1,3 e 4 - evitando duplicatas -- desafio 1 - evitando duplicatas -- desafio 1 - evitando duplicatas -- desafio 1 - evitando duplicatas
-    const emaildoMermo = registros.find(jorge=> jorge.email === dados.email)
-    const telefonedoMermo = registros.find(jorge=> jorge.telefone === dados.telefone)
+    const emaildoMermo = registros.find(jorge => jorge.email === dados.email)
+    const telefonedoMermo = registros.find(jorge => jorge.telefone === dados.telefone)
     const nomedoMermoSensivil = registros.find(roberto => roberto.nome.toLowerCase() === dados.nome.trim().toLowerCase())
     if (emaildoMermo) {
         return res.status(409).json({
