@@ -43,14 +43,18 @@ function FormularioCadastro() {
             })
             const resultado = await resposta.json()
             console.log(resposta)
-<<<<<<< HEAD
             const statusCode = resposta.status; //const que pega o codigo que retorna do servidor e armazena
-=======
-            const statusCode = resposta.status; 
 
->>>>>>> 42996ae92720cc5dfe084e6b1585e92baa09f396
             if (statusCode == 409) {
                 setValidacao({erro: 'Deu erro de conflito ai' }) //como o statusCode é number, com ele é possivel fazer uma condição em cima do codigo para tratá-lo. Nesse caso, o setValidação é alterado na chave erro
+            }
+
+            if (statusCode == 201) {
+                setAtualizar(!atualizar)
+            }
+
+            if (statusCode == 200) {
+                setAtualizar(!atualizar)
             }
 
             if (statusCode == 201) {
