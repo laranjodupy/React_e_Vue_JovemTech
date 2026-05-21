@@ -1,4 +1,4 @@
-function  InputField({label, type, name, placeholder, value, onChange}){
+function  InputField({label, type, name, placeholder, value, onChange, qualReferencia}){
     return(
         <div>
             <label>{label}</label>
@@ -8,6 +8,7 @@ function  InputField({label, type, name, placeholder, value, onChange}){
             placeholder={placeholder}
             value={value}
             onChange={onChange}
+            ref= {qualReferencia}
             />
         </div>
     )

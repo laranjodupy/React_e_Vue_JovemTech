@@ -1,6 +1,6 @@
 import InputField from "./InputField"
 import BotaoEnviar from './BotaoEnviar.jsx'
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react" 
 import { use } from "react"
 
 function FormularioCadastro() {
@@ -9,6 +9,8 @@ function FormularioCadastro() {
     const [coisaslegais, setCoisasLegais] = useState([]) //busca os registros, deixei coisas legais porque são coisas legais
     const [atualizar, setAtualizar] = useState(false)
     const [podeusar, setPodeUsar] = useState({pode: true, carregano: "EnvíSamerda"})
+    const nomeRef = useRef(null)
+    const contador
 
     const buscarCoisasLegais = async () => {
         const resposta = await fetch('http://localhost:3000/registros')
@@ -18,6 +20,10 @@ function FormularioCadastro() {
 
     useEffect(() => { //useEffect serva para uma comunicação in-live
         buscarCoisasLegais() //busca os registros
+        console.log('ref antes do focus:', nomeRef.current)
+        nomeRef.current.focus()
+        console.log('ref antes do focus:', nomeRef.current)
+
     }, [atualizar])
 
     useEffect(() => {
@@ -26,9 +32,16 @@ function FormularioCadastro() {
     const handleSubmit = async (e) => {
         e.preventDefault()
 
-        
-    setPodeUsar({ pode: false, carregano: 'PeraiMf' })
+        if (user.nome.trim() === "") {
+            return setValidacao({erro: "Tem q ter nome filho", sucesso: false})
+        }
 
+        if (user.telefone.length !== 11) {
+            return setValidacao({erro: "Compre um telefone pra colocar o numero", sucesso: false})
+        }
+
+        // o setpodeusar e o settimeout são do desafio para fazer com que o botao fique desabilitado apos ser clicado
+    setPodeUsar({ pode: false, carregano: 'PeraiMf' })
     setTimeout(() => {
         setPodeUsar({ pode: true, carregano: 'EnvíSamerda' })
         }, 3000)
@@ -92,6 +105,7 @@ function FormularioCadastro() {
                     setValidacao({erro: ''})
                 }
             }
+                qualReferencia={nomeRef}
             />
             <InputField
                 label={"Email: "}
@@ -151,6 +165,7 @@ function FormularioCadastro() {
                 }
 
             </div>
+            
         </form>
     )
 }
