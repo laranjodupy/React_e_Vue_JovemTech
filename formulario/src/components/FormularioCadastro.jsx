@@ -1,6 +1,7 @@
 import InputField from "./InputField"
 import BotaoEnviar from './BotaoEnviar.jsx'
 import { useEffect, useState, useRef } from "react" 
+import {useRegistros} from './hooks/useRegistros.js'
 import { use } from "react"
 
 function FormularioCadastro() {
@@ -11,24 +12,10 @@ function FormularioCadastro() {
     const [podeusar, setPodeUsar] = useState({pode: true, carregano: editandoi !== null ? 'Evísamerda' : 'Peraiporra'})
     const [editandoi, setEditandoI] = useState(null)
     const nomeRef = useRef(null)
+    const [nome, setNome] = useState('')
+    const [email, setEmail] = useState('')
 
-    const buscarCoisasLegais = async () => {
-        const resposta = await fetch('http://localhost:3000/registros')
-        const dados = await resposta.json() 
-        setCoisasLegais(dados)
-    }
-
-    useEffect(() => { //useEffect serva para uma comunicação in-live
-        buscarCoisasLegais() //busca os registros
-        console.log('ref antes do focus:', nomeRef.current)
-        nomeRef.current.focus()
-        console.log('ref antes do focus:', nomeRef.current)
-
-    }, [atualizar])
-
-    useEffect(() => {
-        
-    }, [])
+    const {registros, carregando, criar, atualizar, deletar} = useRegistros()
     const handleSubmit = async (e) => {
         e.preventDefault()
 
@@ -44,86 +31,86 @@ function FormularioCadastro() {
     setPodeUsar({ pode: false, carregano: 'PeraiMf' })
     setTimeout(() => {
         setPodeUsar({ pode: true, carregano: 'EnvíSamerda' })
-        }, 3000)
+        }, 3000) }
 
 
-        try {
-            const url = editandoi !== null ? 'http://localhost:3000/registros${editandoi}' : 'http://3000/registros'
-            const method = editandoi !== null ? 'PUT': 'POST'
-            const resposta = await fetch(uerriele, {
-                method,
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stingfy({nome, email, telefone})
-            })
+    //     try {
+    //         const uerriele = editandoi !== null ? 'http://localhost:3000/registros${editandoi}' : 'http://3000/registros'
+    //         const method = editandoi !== null ? 'PUT': 'POST'
+    //         const resposta = await fetch(uerriele, {
+    //             method,
+    //             headers: {'Content-Type': 'application/json'},
+    //             body: JSON.stingfy(user)
+    //         })
 
 
-            const resultado = await resposta.json()
-            console.log(resposta)
-            const statusCode = resposta.status; //const que pega o codigo que retorna do servidor e armazena
+    //         const resultado = await resposta.json()
+    //         console.log(resposta)
+    //         const statusCode = resposta.status; //const que pega o codigo que retorna do servidor e armazena
 
-            if (statusCode == 409) {
-                setValidacao({erro: 'Deu erro de conflito ai' }) //como o statusCode é number, com ele é possivel fazer uma condição em cima do codigo para tratá-lo. Nesse caso, o setValidação é alterado na chave erro
-            }
+    //         if (statusCode == 409) {
+    //             setValidacao({erro: 'Deu erro de conflito ai' }) //como o statusCode é number, com ele é possivel fazer uma condição em cima do codigo para tratá-lo. Nesse caso, o setValidação é alterado na chave erro
+    //         }
 
-            if (statusCode == 201) {
-                setAtualizar(!atualizar)
-            }
+    //         if (statusCode == 201) {
+    //             setAtualizar(!atualizar)
+    //         }
 
-            if (statusCode == 200) {
-                setAtualizar(!atualizar)
-            }
+    //         if (statusCode == 200) {
+    //             setAtualizar(!atualizar)
+    //         }
 
-            if (statusCode == 201) {
-                setAtualizar(!atualizar)
-            }
+    //         if (statusCode == 201) {
+    //             setAtualizar(!atualizar)
+    //         }
 
-            if (statusCode == 200) {
-                setAtualizar(!atualizar)
-            }
+    //         if (statusCode == 200) {
+    //             setAtualizar(!atualizar)
+    //         }
 
-            setValidacao({erro: '', sucesso: true})
-            setUser({nome: '', email: '', telefone: ''})
+    //         setValidacao({erro: '', sucesso: true})
+    //         setUser({nome: '', email: '', telefone: ''})
 
-            setEditandoI(null) // essencial para voltar para omodo de criação
-            buscarCoisasLegais()
+    //         setEditandoI(null) // essencial para voltar para omodo de criação
+    //         buscarCoisasLegais()
 
 
-        } catch (error) {
-            //desafio 
-            console.log('Táerradomizera', error) // da um catch no erro
+    //     } catch (error) {
+    //         //desafio 
+    //         console.log('Táerradomizera', error) // da um catch no erro
             
             
 
-        }
+    //     }
         
-    } 
-    const handleDeletar = async (index) => {
-        console.log(index)
-        const confirmou = window.confirm('Deseja remote este registro?') // forma nativa do navegador perguntar algo antes de fazer tlg
-        if (!confirmou) return
+    // } 
+    // const handleDeletar = async (index) => {
+    //     console.log(index)
+    //     const confirmou = window.confirm('Deseja remote este registro?') // forma nativa do navegador perguntar algo antes de fazer tlg
+    //     if (!confirmou) return
 
-        try{
-            const resposta = await fetch('http//:3000/registros/${index}', {method: 'DELETE'})
-            if (!resposta.ok) {
-                const dados = await resposta.json()
-                setErro(dados.erro)
-                return
-            }
-            buscarCoisasLegais() // atualiza na tela
-        } catch {
-            setValidacao('Erro ao remover. Verifique o servidor')
-        }
-    }
+    //     try{
+    //         const resposta = await fetch('http//:3000/registros/${index}', {method: 'DELETE'})
+    //         if (!resposta.ok) {
+    //             const dados = await resposta.json()
+    //             setErro(dados.erro)
+    //             return
+    //         }
+    //         buscarCoisasLegais() // atualiza na tela
+    //     } catch {
+    //         setValidacao('Erro ao remover. Verifique o servidor')
+    //     }
+    // }
 
-    const handleEditar = (index) => {
-        const registro = registros[index]
+    // const handleEditar = (index) => {
+    //     const registro = registros[index]
 
-        //preenchendo os campos com os dados existentes
-        setUser({nome: registro.nome, email: registro.nome, telefone: registro.telefone})
-        setEditandoI(index)
+    //     //preenchendo os campos com os dados existentes
+    //     setUser({nome: registro.nome, email: registro.nome, telefone: registro.telefone})
+    //     setEditandoI(index)
 
-        nomeRef.current.focus()
-    }
+    //     nomeRef.current.focus()
+    // }
     
     /* -- return:
     - a validacao.erro abaixo pega o valor alterado no setValidacao(que altera ao mesmo tempo que o é trocado, mas não é um hook

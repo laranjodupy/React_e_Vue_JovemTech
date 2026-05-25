@@ -14,7 +14,7 @@ bilola.get('/registros', (req, res) => {
     res.status(200).json(registros)
 });
 
-bilola.get('/   ', (req, res) => {
+bilola.get('/', (req, res) => {
     const dados = req.body;
     res.status(200).json({
         sucesso: true,
@@ -67,7 +67,7 @@ bilola.post('/registros', (req, res) => {
 
 })
 //rota put no béqiendi
-bilola.put('/registros/:id'), (req, res => {
+bilola.put('/registros/:id', (req, res) => {
     const id = parseInt(req.params.id)
     const dados = req.body
     if (id < 0 || id >= registros.length) {
