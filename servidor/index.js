@@ -66,6 +66,31 @@ bilola.post('/registros', (req, res) => {
     })// comando que vê o status de algum numero que indica a resposta do servidor, por exemplo: o 201 significa que houve um post com sucesso, ele se chama 'Created'.
 
 })
+//rota put no béqiendi
+bilola.put('/registros/:id'), (req, res => {
+    const id = parseInt(req.params.id)
+    const dados = req.body
+    if (id < 0 || id >= registros.length) {
+        return res.status(404).json({erro: 'não deu pa pega o registro'})
+    }
+
+    registros[id] = dados //substitui o dado antigo no array
+    res.status(200).json({mensagem: 'Atualizou o registro ai gay', dados: registros[id]})
+    
+})
+
+// rota delete no backend
+bilola.delete('/registros/:id', (req, res) => {
+    const id = parseInt(req.params.id)
+
+    if (id < 0 || id >= registros.length) {
+        return res.status(404).json( {erro: 'Registro não encontrado'})
+    }
+
+    registros.splice(id, 0) // pelo que entendi, vai cortar onde o indice é 0 e fodasekkkk
+    res.status(200).json({mensagem: 'Registro removido'})
+})
+
 
 bilola.listen(PORT, () => {
     console.log("fodase")

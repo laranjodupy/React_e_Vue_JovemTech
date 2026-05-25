@@ -8,9 +8,9 @@ function FormularioCadastro() {
     const [user, setUser] = useState({ nome: '', email: '', telefone: '' })
     const [coisaslegais, setCoisasLegais] = useState([]) //busca os registros, deixei coisas legais porque são coisas legais
     const [atualizar, setAtualizar] = useState(false)
-    const [podeusar, setPodeUsar] = useState({pode: true, carregano: "EnvíSamerda"})
+    const [podeusar, setPodeUsar] = useState({pode: true, carregano: editandoi !== null ? 'Evísamerda' : 'Peraiporra'})
+    const [editandoi, setEditandoI] = useState(null)
     const nomeRef = useRef(null)
-    const contador
 
     const buscarCoisasLegais = async () => {
         const resposta = await fetch('http://localhost:3000/registros')
@@ -48,12 +48,15 @@ function FormularioCadastro() {
 
 
         try {
-            const resposta = await fetch('http://localhost:3000/registros', {
-                method: 'POST', //método é o que vai fazer, nesse caso é o post
-                headers: { 'Content-Type': 'application/json' }, //define ao servidor que esta sendo enviado um json para evitar erros.
-                body: JSON.stringify(user) //como o estado já é um json, basta declará-lo.
-
+            const url = editandoi !== null ? 'http://localhost:3000/registros${editandoi}' : 'http://3000/registros'
+            const method = editandoi !== null ? 'PUT': 'POST'
+            const resposta = await fetch(uerriele, {
+                method,
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stingfy({nome, email, telefone})
             })
+
+
             const resultado = await resposta.json()
             console.log(resposta)
             const statusCode = resposta.status; //const que pega o codigo que retorna do servidor e armazena
@@ -77,7 +80,14 @@ function FormularioCadastro() {
             if (statusCode == 200) {
                 setAtualizar(!atualizar)
             }
-    
+
+            setValidacao({erro: '', sucesso: true})
+            setUser({nome: '', email: '', telefone: ''})
+
+            setEditandoI(null) // essencial para voltar para omodo de criação
+            buscarCoisasLegais()
+
+
         } catch (error) {
             //desafio 
             console.log('Táerradomizera', error) // da um catch no erro
@@ -86,7 +96,36 @@ function FormularioCadastro() {
 
         }
         
-    } /* -- return:
+    } 
+    const handleDeletar = async (index) => {
+        console.log(index)
+        const confirmou = window.confirm('Deseja remote este registro?') // forma nativa do navegador perguntar algo antes de fazer tlg
+        if (!confirmou) return
+
+        try{
+            const resposta = await fetch('http//:3000/registros/${index}', {method: 'DELETE'})
+            if (!resposta.ok) {
+                const dados = await resposta.json()
+                setErro(dados.erro)
+                return
+            }
+            buscarCoisasLegais() // atualiza na tela
+        } catch {
+            setValidacao('Erro ao remover. Verifique o servidor')
+        }
+    }
+
+    const handleEditar = (index) => {
+        const registro = registros[index]
+
+        //preenchendo os campos com os dados existentes
+        setUser({nome: registro.nome, email: registro.nome, telefone: registro.telefone})
+        setEditandoI(index)
+
+        nomeRef.current.focus()
+    }
+    
+    /* -- return:
     - a validacao.erro abaixo pega o valor alterado no setValidacao(que altera ao mesmo tempo que o é trocado, mas não é um hook
     
     - observação, no onChange de nome, percebe-se que é possível adicionar varias funções numa arrow function. Nesse caso, o setUser e o setValidação trabalham ao mesmo tempo nessa função.*/
@@ -148,6 +187,14 @@ function FormularioCadastro() {
                 texto={podeusar.carregano} 
                 disabled={!podeusar.pode}
             />     
+            {editandoi !== null && (
+                <button type='button' onClick={() => {
+                    setEditandoI(null) // desliga a edissaum
+                    setUser({nome: '', email: '', telefone:''})
+                }}>
+                    Cancelar edissaum
+                </button>
+            )}
             <div id= "registros">
                 <p>
                     Nome do usuário:  {user.nome}
@@ -159,6 +206,15 @@ function FormularioCadastro() {
                                 {i}
                                 <hr/>
                                 {item.nome} - {item.email}
+                                <div style={{border:    '2px solid #F4FF5B',
+                                    borderRadius:'4px', padding:'4px',
+                                    boxShadow:"0 0 10px #F4FF5B"
+                                }} >
+                                    <button onClick={() => handleDeletar(i)}>
+                                        Deletar
+                                    </button>
+                                    <button onClick={() => handleEditar(i)}> Editar </button>
+                                </div>
                             </li>
                         ))}
                     </ul>)
